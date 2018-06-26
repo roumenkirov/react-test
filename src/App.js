@@ -1,21 +1,36 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import Login from './routes/login/Login';
+import Cinemas from './routes/cinemas/Cinemas';
+import Program from './routes/program/Program';
+
 import './App.css';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="App">
+                <BrowserRouter>
+                    <Switch>
+                        <Route path="/" exact component={Login}></Route>
+                        {this.props.account.username ? <Route path="/cinemas" exact component={Cinemas}></Route> : null}
+                        {this.props.account.username ?
+                            <Route path="/program/:name" exact component={Program}></Route> : null}
+                        <Redirect to="/"/>
+                    </Switch>
+                </BrowserRouter>
+
+            </div>
+        );
+    }
 }
 
-export default App;
+const mapStateToProps = state => {
+    return {
+        account: state.account
+    };
+};
+
+export default connect(mapStateToProps, null)(App);
